@@ -11,12 +11,6 @@ sourceCompatibility = JavaVersion.VERSION_17
 
 repositories {
     mavenCentral()
-
-    // Halo 官方仓库（GitHub Actions 必须用 http）
-    maven {
-        url 'http://repo.halo.run/repository/maven-public/'
-        allowInsecureProtocol = true
-    }
 }
 
 dependencies {
