@@ -17,4 +17,45 @@ repositories {
 
 dependencies {
     compileOnly files('libs/halo-2.15.0.jar')
+    
+    implementation 'org.springframework:spring-context:5.3.30'
+    implementation 'org.springframework:spring-web:5.3.30'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux:2.7.18'
+    
+    // ========== 响应式编程（Reactor） ==========
+    implementation 'io.projectreactor:reactor-core:3.5.11'
+    
+    // ========== 插件框架（PF4J） ==========
+    implementation 'org.pf4j:pf4j:3.10.0'
+    
+    // ========== Lombok（插件已处理，此处兜底） ==========
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+    
+    // ========== 日志（Slf4j） ==========
+    implementation 'org.slf4j:slf4j-api:1.7.36'
+    implementation 'ch.qos.logback:logback-classic:1.2.13'
 }
+
+// 打包配置（生成符合Halo规范的插件JAR）
+jar {
+    archiveBaseName = 'photo-wall-plugin'
+    archiveVersion = '1.0.0'
+    manifest {
+        attributes(
+            'Plugin-Id': 'photo-wall-plugin',
+            'Plugin-Version': '1.0.0',
+            'Plugin-Name': 'Photo Wall Plugin',
+            'Plugin-Description': 'Photo/Video Wall for Halo',
+            'Plugin-Provider': 'Your Name',
+            'Halo-Version': '>=2.18.0'
+        )
+    }
+}
+
+// 编译时的JVM参数（可选，解决Lombok注解识别问题）
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+    options.compilerArgs += ['-Xlint:unchecked', '-Xlint:deprecation']
+}
+
