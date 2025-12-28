@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'application' // 如果你需要运行 main 方法，可保留
 }
 
 group = 'com.yourname'
@@ -16,5 +17,33 @@ repositories {
 }
 
 dependencies {
-    compileOnly files('libs/halo-2.15.0.jar')
+    // Halo 本地 JAR（使用 2.15.0）
+    implementation files('libs/halo-2.15.0.jar')
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+
+    // Spring Boot & WebFlux
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    // Reactor
+    implementation 'io.projectreactor:reactor-core:3.5.9'
+
+    // PF4J 插件框架
+    implementation 'org.pf4j:pf4j:3.13.0'
+
+    // 可选：测试库
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+application {
+    // 如果你的插件需要 main 方法运行，设置主类
+    mainClass = 'com.yourname.Main'
+}
+
+// Lombok 编译设置
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
 }
