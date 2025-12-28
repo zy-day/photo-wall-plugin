@@ -44,10 +44,16 @@ shadowJar {
     manifest {
         attributes 'Plugin-Class' : 'run.halo.plugin.photowall.PhotoWallPlugin',
                    'Plugin-Version' : project.version,
-                   'Plugin-Requires' : '2.10.0'
+                   'Plugin-Requires' : '2.15.0'
     }
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
 build.dependsOn shadowJar
+
 
 
