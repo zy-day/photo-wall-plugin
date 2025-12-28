@@ -14,7 +14,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'run.halo.app:api:2.10.0'
+     compileOnly files('libs/halo-2.15.0.jar')
 
     annotationProcessor 'org.projectlombok:lombok:1.18.28'
     compileOnly 'org.projectlombok:lombok:1.18.28'
@@ -49,4 +49,5 @@ shadowJar {
 }
 
 build.dependsOn shadowJar
+
 
