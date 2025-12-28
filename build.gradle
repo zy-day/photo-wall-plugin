@@ -9,20 +9,18 @@ group = 'run.halo.plugin'
 version = '1.0.0'
 sourceCompatibility = JavaVersion.VERSION_17
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
 repositories {
     mavenCentral()
 }
 
 dependencies {
      compileOnly files('libs/halo-2.15.0.jar')
-
-    annotationProcessor 'org.projectlombok:lombok:1.18.28'
-    compileOnly 'org.projectlombok:lombok:1.18.28'
-
-    implementation 'org.springframework.boot:spring-boot-starter-webflux'
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 tasks.named('test') {
@@ -48,12 +46,8 @@ shadowJar {
     }
 }
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
-    }
-}
 build.dependsOn shadowJar
+
 
 
 
