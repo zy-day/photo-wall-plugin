@@ -1,61 +1,40 @@
 plugins {
     id 'java'
+    id 'io.freefair.lombok' version '6.6.3'
+    id 'application'
 }
 
-group = 'com.yourname'
-version = '1.0.0'
-
 java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
-    }
+    sourceCompatibility = JavaVersion.VERSION_17 // 降级到Java 17（Halo 2.x官方推荐）
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 repositories {
     mavenCentral()
+    // 新增：Halo快照仓库（若稳定版未同步）
+    maven { url 'https://repo.halo.run/repository/snapshots/' }
+    maven { url 'https://repo.halo.run/repository/public/' }
+    // 新增：Spring仓库（兜底依赖）
+    maven { url 'https://repo.spring.io/milestone' }
 }
 
 dependencies {
-    compileOnly files('libs/halo-2.15.0.jar')
+    // ========== 替换为Halo 2.x插件核心依赖 ==========
+    implementation 'run.halo:plugin-starter:2.18.0' // 官方starter，包含所有扩展API
+    implementation 'run.halo:app-extension:2.18.0'   // 替换原halo-extension-core
     
-    implementation 'org.springframework:spring-context:5.3.30'
-    implementation 'org.springframework:spring-web:5.3.30'
+    // 其他依赖保留（Spring/Reactor/PF4J/Lombok）
     implementation 'org.springframework.boot:spring-boot-starter-webflux:2.7.18'
-    
-    // ========== 响应式编程（Reactor） ==========
-    implementation 'io.projectreactor:reactor-core:3.5.11'
-    
-    // ========== 插件框架（PF4J） ==========
     implementation 'org.pf4j:pf4j:3.10.0'
-    
-    // ========== Lombok（插件已处理，此处兜底） ==========
     compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
-    
-    // ========== 日志（Slf4j） ==========
-    implementation 'org.slf4j:slf4j-api:1.7.36'
-    implementation 'ch.qos.logback:logback-classic:1.2.13'
 }
 
-// 打包配置（生成符合Halo规范的插件JAR）
-jar {
-    archiveBaseName = 'photo-wall-plugin'
-    archiveVersion = '1.0.0'
-    manifest {
-        attributes(
-            'Plugin-Id': 'photo-wall-plugin',
-            'Plugin-Version': '1.0.0',
-            'Plugin-Name': 'Photo Wall Plugin',
-            'Plugin-Description': 'Photo/Video Wall for Halo',
-            'Plugin-Provider': 'Your Name',
-            'Halo-Version': '>=2.18.0'
-        )
+// 强制依赖刷新（解决缓存问题）
+configurations.all {
+    resolutionStrategy {
+        cacheChangingModulesFor 0, 'seconds'
+        force 'run.halo:plugin-starter:2.18.0'
+        force 'run.halo:app-extension:2.18.0'
     }
 }
-
-// 编译时的JVM参数（可选，解决Lombok注解识别问题）
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
-    options.compilerArgs += ['-Xlint:unchecked', '-Xlint:deprecation']
-}
-
