@@ -1,40 +1,47 @@
 plugins {
     id 'java'
     id 'io.freefair.lombok' version '6.6.3'
-    id 'application'
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17 // 降级到Java 17（Halo 2.x官方推荐）
+    sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
 }
 
+// 仅保留Maven Central（移除Halo私有仓库）
 repositories {
     mavenCentral()
-    // 新增：Halo快照仓库（若稳定版未同步）
-    maven { url 'https://repo.halo.run/repository/snapshots/' }
-    maven { url 'https://repo.halo.run/repository/public/' }
-    // 新增：Spring仓库（兜底依赖）
-    maven { url 'https://repo.spring.io/milestone' }
 }
 
 dependencies {
-    // ========== 替换为Halo 2.x插件核心依赖 ==========
-    implementation 'run.halo:plugin-starter:2.18.0' // 官方starter，包含所有扩展API
-    implementation 'run.halo:app-extension:2.18.0'   // 替换原halo-extension-core
+    // ========== 替换为Maven Central可访问的Halo依赖 ==========
+    implementation 'org.halo-dev:plugin-api:2.18.0'
+    implementation 'org.halo-dev:extension-core:2.18.0'
     
-    // 其他依赖保留（Spring/Reactor/PF4J/Lombok）
+    // ========== 其他依赖保留 ==========
+    // Spring Web + WebFlux
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.7.18'
     implementation 'org.springframework.boot:spring-boot-starter-webflux:2.7.18'
+    // PF4J插件框架
     implementation 'org.pf4j:pf4j:3.10.0'
+    // Reactor响应式
+    implementation 'io.projectreactor:reactor-core:3.5.11'
+    // Lombok
     compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
+    // 日志
+    implementation 'org.slf4j:slf4j-api:1.7.36'
 }
 
-// 强制依赖刷新（解决缓存问题）
+// 打包配置
+jar {
+    archiveBaseName = 'photo-wall-plugin'
+    archiveVersion = '1.0.0'
+}
+
+// 强制依赖刷新
 configurations.all {
     resolutionStrategy {
         cacheChangingModulesFor 0, 'seconds'
-        force 'run.halo:plugin-starter:2.18.0'
-        force 'run.halo:app-extension:2.18.0'
     }
 }
