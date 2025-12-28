@@ -1,13 +1,9 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '2.7.18'
-    id 'io.spring.dependency-management' version '1.1.4'
-    id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
-group = 'run.halo.plugin'
+group = 'com.yourname'
 version = '1.0.0'
-sourceCompatibility = JavaVersion.VERSION_17
 
 java {
     toolchain {
@@ -20,34 +16,5 @@ repositories {
 }
 
 dependencies {
-     compileOnly files('libs/halo-2.15.0.jar')
+    compileOnly files('libs/halo-2.15.0.jar')
 }
-
-tasks.named('test') {
-    useJUnitPlatform()
-}
-
-bootJar {
-    enabled = false
-}
-
-jar {
-    enabled = true
-    archiveClassifier = ''
-}
-
-shadowJar {
-    archiveClassifier = null
-    mergeServiceFiles()
-    manifest {
-        attributes 'Plugin-Class' : 'run.halo.plugin.photowall.PhotoWallPlugin',
-                   'Plugin-Version' : project.version,
-                   'Plugin-Requires' : '2.15.0'
-    }
-}
-
-build.dependsOn shadowJar
-
-
-
-
