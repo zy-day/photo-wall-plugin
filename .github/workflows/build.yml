@@ -18,7 +18,16 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Build plugin with Gradle
+      - name: Set up Gradle 8.5
         uses: gradle/gradle-build-action@v3
         with:
-          arguments: build
+          gradle-version: 8.5
+
+      - name: Build plugin
+        run: gradle build
+
+      - name: Upload plugin jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: halo-photo-wall-plugin
+          path: build/libs/*.jar
